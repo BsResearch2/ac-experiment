@@ -20,7 +20,7 @@ This version recreates the **High Process Control × High Outcome Control** part
 ## Experimental behavior
 - Process-high texts: "We strongly recommend that your post be at least 80 words."; "Your post must include at least 5 relevant hashtags before it can be published."; red pulsing "Live AI Tracking".
 - Recommending and Restricting panels turn green on meeting 80 words and 5 hashtags, respectively.
-- **As in the prior Pave version, the hashtag requirement is displayed but publishing is not actually blocked.** Change this only after deciding how to operationalize Restricting.
+- **Hashtag restriction enforced:** Publishing requires at least 5 distinct hashtags from the hashtag field or suggested chips. Duplicate hashtags count once. A blocked attempt preserves the draft and generates no post or outcome feedback. The 80-word threshold remains a recommendation.
 - Following publication, high-outcome feedback shows Rating, Rewarding, Sanctioning using the supplied baseline 3.5% engagement, +5% visibility, $5.20 ad revenue.
 - In `config.js`, `outcomeValence:'mixed'` (default) chooses above or below with equal probability on each publication, independently of post content. Engagement and visibility share that condition: below gives 2.8–3.3% engagement and +3.0–4.5% visibility; above gives 3.7–4.2% engagement and +5.5–7.0% visibility. Ad revenue always remains $3.70–$4.90, below the $5.20 average. Set `outcomeValence` to `'below'` or `'above'` to force engagement/visibility for a fixed experimental condition.
 - Each name edit, bio edit, and published post is saved as an append-only event with Prolific ID and timestamp; post records also contain the unshown heuristic personalness score (0–100).
