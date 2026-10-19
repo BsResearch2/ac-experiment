@@ -4,7 +4,8 @@ window.EXPERIMENT_CONFIG = {
   supabaseAnonKey: '',
   // This first build implements High Process x High Outcome.
   condition: 'high_process_high_outcome',
-  // 'mixed': 50/50 above or below per post for engagement and visibility.
-  // 'below' and 'above' force a condition. Ad revenue always stays below average.
+  // Under 80 words: always below. At 80+ words, 'mixed' gives 50/50 outcomes.
+  // 'below'/'above' fix eligible outcomes; 'above' never bypasses the 80-word gate.
+  // Ad revenue always stays below average.
   outcomeValence: 'mixed'
 };
