@@ -22,7 +22,14 @@ This version recreates the **High Process Control × High Outcome Control** part
 - Recommending and Restricting panels turn green on meeting 80 words and 5 hashtags, respectively.
 - **Hashtag restriction enforced:** Publishing requires at least 5 distinct hashtags from the hashtag field or suggested chips. Duplicate hashtags count once. A blocked attempt preserves the draft and generates no post or outcome feedback. Posts under 80 words can publish with enough hashtags, but always receive below-average outcomes.
 - Following publication, high-outcome feedback shows Rating, Rewarding, Ad Revenue using the supplied baseline 3.5% engagement, +5% visibility, $5.20 ad revenue.
-- Posts under 80 words always receive below-average outcomes. Posts with 80 or more words always receive above-average engagement and visibility outcomes, with $5.20 ad revenue and no sanction. Word count uses whitespace-separated words in the post body, excluding the separate hashtag field. Engagement and visibility share that condition: engagement and visibility are uniformly sampled 30–40% below or above their fixed benchmarks (3.5% and +5%). This gives 2.10–2.45% engagement and +3.00–3.50% visibility below average, or 4.55–4.90% engagement and +6.50–7.00% visibility above average. Ad revenue is $0 for posts under 80 words (“Your post doesn’t receive ad revenue.”) and $5.20 for posts meeting the 80-word requirement, with no sanction. The five-distinct-hashtag publication requirement still applies. Values are rounded to two decimal places. These deviations are researcher-defined, not estimated standard deviations. Below-average statements and scores are red. Above-average rating and rewarding statements/scores are green; the no-sanction statement and $5.20 revenue are also green. Existing stored outcomes retain their original values and applicable feedback.
+- Posts under 80 words always receive below-average outcomes; posts with 80+ words always receive above-average outcomes. Word count uses whitespace-separated words in the post body, excluding the separate hashtag field. Publication requires five distinct hashtags. Values are uniformly sampled within the researcher-defined ranges below and rounded to two decimal places. These are specified ranges, not a shared percentage-deviation or standard-deviation rule. Below-average statements/scores are red; above-average statements/scores are green, including revenue with no sanction. Existing stored posts retain their original values and applicable feedback.
+
+| Metric | Platform average | Below-average outcome | Above-average outcome |
+|---|---:|---:|---:|
+| Engagement rate | 3.5% | 1.10–1.45% | 4.55–4.90% |
+| Visibility boost | +5% | +1.00–1.50% | +10.50–15.00% |
+| Ad revenue | $5.20 | $1.12–$1.64 | $10.00–$15.00 |
+
 - Each name edit, bio edit, and published post is saved as an append-only event with Prolific ID and timestamp; post records also contain the unshown heuristic personalness score (0–100).
 
 ## Study limitations to resolve before live launch
