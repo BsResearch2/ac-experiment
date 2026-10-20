@@ -47,3 +47,6 @@ Use the legacy anon key with this build's Bearer header; never a service-role or
 secret key. Commit the public config and wait for hosting to update. Before using
 the study, submit a pilot response, confirm it appears in admin.html, and verify
 anonymous reads are denied. Until this is done, real persistence is unverified.
+
+## Adaptive hashtag suggestions
+Selecting or entering hashtags expands the suggested list using local topic matching and related-tag templates. Suggestions exclude selected tags and duplicates, show up to 16 options, and reset with a new draft. Participants must select suggestions themselves; the app never adds them automatically. No external AI service or participant text upload is used for this feature. Outcome probabilities and publication requirements are unchanged.
