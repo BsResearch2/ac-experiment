@@ -59,3 +59,6 @@ Posts, original feedback values, name/bio, and unfinished drafts are saved in lo
 
 ## AI control placement
 AI RECOMMENDING appears inside the white composer card, directly above its Composer heading; AI RESTRICTING sits above the hashtag field, with “at least 5 hashtags” bold in both unmet/met messages. AI MONITORING remains in the right sidebar on desktop. Labels retain their AI attribution when requirements are met. Mobile shows monitoring before the recommendation/composer.
+
+## Persistent monitoring indicator
+AI Monitoring stays at the top of the right panel during both composing and feedback. Its larger activity indicator uses a 1.5-second pulse and expanding halo; reduced-motion preferences disable animation. The panel shows the same content-creation-process label and does not introduce additional tracking.
