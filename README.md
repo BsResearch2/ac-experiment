@@ -18,7 +18,7 @@ This version recreates the **High Process Control × High Outcome Control** part
 7. Do not recruit until privacy/security, consent and IRB requirements are reviewed. Because this public app allows anonymous writes, consider adding server-side rate limiting/bot protection (e.g., Supabase Edge Function) and capacity planning.
 
 ## Experimental behavior
-- Process-high texts: "We strongly recommend that your post be at least 80 words."; "Your post must include at least 5 relevant hashtags before it can be published."; red pulsing "Live AI Tracking".
+- Process-high texts: "We strongly recommend that your post be at least 80 words."; "Your post must include at least 5 relevant hashtags before it can be published."; red pulsing "Live tracking of your post’s word count and hashtag count.".
 - Recommending and Restricting panels turn green on meeting 80 words and 5 hashtags, respectively.
 - **Hashtag restriction enforced:** Publishing requires at least 5 distinct hashtags from the hashtag field or suggested chips. Duplicate hashtags count once. A blocked attempt preserves the draft and generates no post or outcome feedback. Posts under 80 words can publish with enough hashtags, but always receive below-average outcomes.
 - Following publication, high-outcome feedback shows Rating, Rewarding, Sanctioning using the supplied baseline 3.5% engagement, +5% visibility, $5.20 ad revenue.
