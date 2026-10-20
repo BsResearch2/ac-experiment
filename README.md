@@ -50,3 +50,6 @@ anonymous reads are denied. Until this is done, real persistence is unverified.
 
 ## Adaptive hashtag suggestions
 Selecting or entering hashtags expands the suggested list using local topic matching and related-tag templates. Suggestions exclude selected tags and duplicates, show up to 16 options, and reset with a new draft. Participants must select suggestions themselves; the app never adds them automatically. No external AI service or participant text upload is used for this feature. Outcome probabilities and publication requirements are unchanged.
+
+## Feedback placement
+Each published post shows its own Rating, Rewarding, and Sanctioning cards directly below its content and hashtags. Earlier posts retain their feedback during the session. AI Guidance remains alongside the composer (above it on mobile). Successful publication scrolls to the new post, respecting reduced-motion preferences.
