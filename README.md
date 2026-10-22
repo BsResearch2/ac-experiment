@@ -74,3 +74,6 @@ Ad Revenue has replaced Discoverability for new posts. Feedback explains higher 
 
 ## Review and revision
 After publication, participants are explicitly asked to review the evaluation criteria and feedback and revise their post accordingly. Submitted text and hashtags stay in the composer, and the action becomes Publish revision. The original remains in history; each revision is a new post with its own feedback. Post details include `post_id` and `revision_of` so revisions can be linked without altering the append-only event schema. Revision state persists per ID with the draft. Clear draft starts an independent post without deleting history.
+
+## Task reminders
+The welcome/Prolific-ID page and main creation screen both show the self-focused task in 17px bold text. Revision prompts repeat the instruction to focus on the participant’s own interests, experiences, hobbies, opinions, or perspectives. These are the participant-facing stages available in this app; external recruitment or survey pages must be updated separately.
