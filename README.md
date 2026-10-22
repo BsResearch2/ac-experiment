@@ -71,3 +71,6 @@ AI RECOMMENDING appears inside the white composer card, directly above its Compo
 AI Monitoring stays at the top of the right panel during both composing and feedback. Its larger activity indicator uses a 1.5-second pulse and expanding halo; reduced-motion preferences disable animation. The panel shows the same content-creation-process label and does not introduce additional tracking.
 
 Ad Revenue has replaced Discoverability for new posts. Feedback explains higher or reduced revenue using the 80-word threshold. New saved events use `ad_revenue` in post detail and `revenue` in feedback JSON. Existing historical discoverability and revenue outcomes remain unchanged and supported for restoration.
+
+## Review and revision
+After publication, participants are explicitly asked to review the evaluation criteria and feedback and revise their post accordingly. Submitted text and hashtags stay in the composer, and the action becomes Publish revision. The original remains in history; each revision is a new post with its own feedback. Post details include `post_id` and `revision_of` so revisions can be linked without altering the append-only event schema. Revision state persists per ID with the draft. Clear draft starts an independent post without deleting history.
