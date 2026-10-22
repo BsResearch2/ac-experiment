@@ -21,14 +21,14 @@ This version recreates the **High Process Control × High Outcome Control** part
 - Process-high texts: "We strongly recommend that your post be at least 80 words."; "Your post must include at least 5 relevant hashtags before it can be published."; red pulsing "Live Tracking of your content creation process".
 - Recommending and Restricting panels turn green on meeting 80 words and 5 hashtags, respectively.
 - **Hashtag restriction enforced:** Publishing requires at least 5 distinct hashtags from the hashtag field or suggested chips. Duplicate hashtags count once. A blocked attempt preserves the draft and generates no post or outcome feedback. Posts under 80 words can publish with enough hashtags, but always receive below-average outcomes.
-- Following publication, high-outcome feedback shows Rating, Rewarding, Discoverability with baselines of 3.5% engagement, +5% visibility, and 50 people.
-- Posts under 80 words always receive below-average outcomes; posts with 80+ words always receive above-average outcomes. Word count uses whitespace-separated words in the post body, excluding the separate hashtag field. Publication requires five distinct hashtags. Values are uniformly sampled within the researcher-defined ranges below; engagement and visibility are rounded to two decimal places, while discoverability is sampled as an inclusive whole-person count. These are specified ranges, not a shared percentage-deviation or standard-deviation rule. Below-average statements/scores are red; above-average statements/scores are green, including discoverability. Existing stored posts retain their original values and applicable feedback.
+- Following publication, high-outcome feedback shows Rating, Rewarding, Ad Revenue with baselines of 3.5% engagement, +5% visibility, and $5.20 revenue.
+- Posts under 80 words always receive below-average outcomes; posts with 80+ words always receive above-average outcomes. Word count uses whitespace-separated words in the post body, excluding the separate hashtag field. Publication requires five distinct hashtags. Values are uniformly sampled within the researcher-defined ranges below and rounded to two decimal places. These are specified ranges, not a shared percentage-deviation or standard-deviation rule. Below-average statements/scores are red; above-average statements/scores are green, including ad revenue. Existing stored posts retain their original values and applicable feedback.
 
 | Metric | Platform average | Below-average outcome | Above-average outcome |
 |---|---:|---:|---:|
 | Engagement rate | 3.5% | 1.10–1.45% | 4.55–4.90% |
 | Visibility boost | +5% | +1.00–1.50% | +10.50–15.00% |
-| Discoverability to potential new followers | 50 people | 1–10 people | 100–150 people |
+| Ad revenue | $5.20 | $1.12–$1.64 | $10.00–$15.00 |
 
 - Each name edit, bio edit, and published post is saved as an append-only event with Prolific ID and timestamp; post records also contain the unshown heuristic personalness score (0–100).
 
@@ -59,7 +59,7 @@ anonymous reads are denied. Until this is done, real persistence is unverified.
 Selecting or entering hashtags expands the suggested list using local topic matching and related-tag templates. Suggestions exclude selected tags and duplicates, show up to 16 options, and reset with a new draft. Participants must select suggestions themselves; the app never adds them automatically. No external AI service or participant text upload is used for this feature. Outcome probabilities and publication requirements are unchanged.
 
 ## Feedback placement
-Each successful publication shows Rating, Rewarding, and Discoverability in the top-right panel (above the composer on mobile). Starting the next draft restores AI Guidance there. Feedback is no longer rendered beneath posts. Historical outcome values remain in each post’s browser-local record. After publishing, the app scrolls to feedback and respects reduced-motion preferences.
+Each successful publication shows Rating, Rewarding, and Ad Revenue in the top-right panel (above the composer on mobile). Starting the next draft restores AI Guidance there. Feedback is no longer rendered beneath posts. Historical outcome values remain in each post’s browser-local record. After publishing, the app scrolls to feedback and respects reduced-motion preferences.
 
 ## Browser history by participant
 Posts, original feedback values, name/bio, and unfinished drafts are saved in localStorage under a separate key for each exact, trimmed Prolific ID. Entering the same ID in the same browser restores that history; a previously unseen ID starts fresh. Switching IDs does not delete another ID’s history. This is browser-local convenience storage, not authentication or a researcher database: anyone with access to that browser and ID can reopen its history. Clearing site data, private browsing expiration, or changing devices loses access. Storage failures display a message instead of claiming the history was saved. Responses from before this feature cannot be recovered after their page session ended. Backend collection remains separate.
@@ -70,4 +70,4 @@ AI RECOMMENDING appears inside the white composer card, directly above its Compo
 ## Persistent monitoring indicator
 AI Monitoring stays at the top of the right panel during both composing and feedback. Its larger activity indicator uses a 1.5-second pulse and expanding halo; reduced-motion preferences disable animation. The panel shows the same content-creation-process label and does not introduce additional tracking.
 
-Discoverability replaces ad revenue for new posts. Feedback states the generated count of potential new followers and whether the post contains at least/fewer than 80 words. This represents potential audience discovery, not confirmed follows. Existing stored revenue outcomes remain unchanged and supported for history restoration; new saved events use `discoverability_people` in post detail and `discoverability` in feedback JSON.
+Ad Revenue has replaced Discoverability for new posts. Feedback explains higher or reduced revenue using the 80-word threshold. New saved events use `ad_revenue` in post detail and `revenue` in feedback JSON. Existing historical discoverability and revenue outcomes remain unchanged and supported for restoration.

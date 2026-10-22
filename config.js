@@ -5,5 +5,5 @@ window.EXPERIMENT_CONFIG = {
   // This first build implements High Process x High Outcome.
   condition: 'high_process_high_outcome',
   // Outcomes: under 80 words always below average; 80+ always above.
-  // Discoverability: 1–10 potential new followers under 80 words; 100–150 at 80+.
+  // Ad revenue: $1.12–$1.64 under 80 words; $10.00–$15.00 at 80+.
 };
