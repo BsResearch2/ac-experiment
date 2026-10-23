@@ -86,5 +86,5 @@ Practice enforcement: both score generation and feedback rendering are disabled 
 
 ## Participant versions
 - `/hh/`: current High Process × High Outcome app. Existing root URL remains an HH entry point and shares its saved history.
-- `/hl/`: High Process × Low Outcome, using the same flow and rules as HH but `feedbackStyle: metrics-only`: headings, benchmarks, and participant values without algorithm explanations. The third card is headed Sanctioning; its current numeric metric is Ad Revenue.
+- `/hl/`: High Process × Low Outcome, using the same flow and rules as HH but `feedbackStyle: metrics-only`: headings, benchmarks, and participant values without algorithm explanations. The third card is Ad Revenue, with a $5.20 benchmark and $1.12–$1.64 / $10.00–$15.00 outcome ranges.
 Both use shared `app.css` and `app.js` with their own `config.js`. Shared code keeps the common UI and rules consistent; version-specific configuration controls feedback explanations. HL has a separate localStorage namespace for stage progress, drafts, profiles, and posts. Existing HH storage keys are preserved. The existing researcher dashboard remains at `/admin.html`; when backend configuration is enabled, use consistent project settings in each relevant config.
