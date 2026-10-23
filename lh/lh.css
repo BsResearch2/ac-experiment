@@ -1,0 +1,9 @@
+/* Low-process monitoring cue: friendly assistance indicator instead of red live tracking. */
+.monitor .dot{
+  background:#5f8f6b;
+  animation:lh-monitor-beacon 1.5s ease-in-out infinite;
+}
+@keyframes lh-monitor-beacon{
+  0%,100%{opacity:1;box-shadow:0 0 0 3px rgba(95,143,107,.18)}
+  50%{opacity:.5;box-shadow:0 0 0 9px rgba(95,143,107,0)}
+}
