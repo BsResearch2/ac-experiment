@@ -83,3 +83,8 @@ Page 1 is the Welcome/Prolific-ID screen. New IDs then enter Page 2 (Practice), 
 Page 3 (Main Task) begins with instructions to create and publish. No review/revision instructions are shown before a below-average result; only that result triggers the optional revision prompt. Practice posts/drafts are kept in a separate browser-local session key; the profile carries forward, while the main composer and post history start fresh. Main events include `study_phase: main` in post detail. Stage progress persists by Prolific ID. Existing IDs with main-task history resume the main task without losing history. Practice is familiarization, not an additional experiment condition.
 
 Practice enforcement: both score generation and feedback rendering are disabled during practice. Practice posts store null feedback locally and are not sent to the researcher database. Main-task feedback and below-average optional revisions remain unchanged.
+
+## Participant versions
+- `/hh/`: current High Process × High Outcome app. Existing root URL remains an HH entry point and shares its saved history.
+- `/hl/`: identical participant app copied as the starting point for High Process × Low Outcome. Low-outcome behavior has not yet been specified or implemented; only its condition metadata differs.
+Both use shared `app.css` and `app.js` with their own `config.js`. Shared code keeps their current UI and behavior identical. HL has a separate localStorage namespace for stage progress, drafts, profiles, and posts. Existing HH storage keys are preserved. The existing researcher dashboard remains at `/admin.html`; when backend configuration is enabled, use consistent project settings in each relevant config.
