@@ -86,7 +86,7 @@ Practice enforcement: both score generation and feedback rendering are disabled 
 
 ## Participant versions
 - `/hh/`: current High Process × High Outcome app. Existing root URL remains an HH entry point and shares its saved history.
-- `/hl/`: High Process × Low Outcome, using the same flow and rules as HH but `feedbackStyle: metrics-only`: headings, benchmarks, and participant values without algorithm explanations. The third card is Ad Revenue, with a $5.20 benchmark and $1.12–$1.64 / $10.00–$15.00 outcome ranges.
+- `/hl/`: High Process × Low Outcome: retains high-process AI controls and publishing requirements, but `feedbackStyle: none` disables all performance feedback and revision invitations. Successful main-task posting shows only a thank-you confirmation.
 Both use shared `app.css` and `app.js` with their own `config.js`. Shared code keeps the common UI and rules consistent; version-specific configuration controls feedback explanations. HL has a separate localStorage namespace for stage progress, drafts, profiles, and posts. Existing HH storage keys are preserved. The existing researcher dashboard remains at `/admin.html`; when backend configuration is enabled, use consistent project settings in each relevant config.
 
 ## Revised LL condition
@@ -94,3 +94,6 @@ LL now has no AI Recommending, Monitoring, or Restricting panels, word counter, 
 
 ## Revised LH condition
 LH has no Monitoring, Recommending, or Restricting panels, word counter, hashtag suggestions, or minimum hashtag requirement. Nonempty posts may be any length. Practice has confirmation only. Main-task high-outcome feedback keeps explicit algorithm-attribution messages and existing numeric ranges, and includes “because” explanations revealing the 80-word rule after publication. The rule is not presented as guidance before posting. Internally, fewer than 80 words gives below-average results and 80+ gives above-average results; only below-average main-task results invite optional revision. HH, HL, and LL are unchanged by this LH update.
+
+## Revised HL outcome control
+HL keeps its high-process Recommending, Monitoring, Restricting, word counter, and five-distinct-hashtag requirement. It now uses `feedbackStyle: none`: main-task publication shows “Thank you! Your post has been published.” with no outcome scores, feedback cards, or revision invitation. Drafts clear after successful publishing; posts and profiles retain browser-local history, including legacy posts. New events contain null feedback and personalness scores. HH, LH, and LL are unchanged.

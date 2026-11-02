@@ -5,7 +5,6 @@ window.EXPERIMENT_CONFIG = {
   // Participant version and experimental condition.
   variant: 'hl',
   condition: 'high_process_low_outcome',
-  feedbackStyle: 'metrics-only',
-  // Outcomes: under 80 words always below average; 80+ always above.
-  // Ad revenue: $1.12–$1.64 under 80 words; $10.00–$15.00 at 80+.
+  feedbackStyle: 'none',
+  // No post-performance scores or revision prompts; high-process controls remain.
 };
