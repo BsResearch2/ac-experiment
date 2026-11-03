@@ -1,99 +1,92 @@
-# Content Creator Experiment — first build
+# Content Creator Experiment
 
-This version recreates the **High Process Control × High Outcome Control** participant interface from the supplied screenshot, and uses the supplied 2×2 design matrix for its post-publication outcome feedback.
+Static social-media simulation with three participant pages: Welcome/Prolific ID, Practice, and Main Task. GitHub Pages serves the interface; Supabase stores new main-task events.
 
-## Included
-- `index.html`: public, mobile-friendly participant-facing simulation; no Pave account or participant login.
-- `admin.html`: private researcher view, Supabase Auth login, Prolific ID filter, CSV export.
-- `database.sql`: one append-only events table and Row Level Security (RLS) so anonymous visitors may *insert* but cannot *read* any records; authorized researcher can read.
-- `config.js`: Supabase credentials (public anon key only), initial condition and feedback valence.
+## Conditions
 
-## Setup before collecting real research data
-1. Create a Supabase project under your control, in a region appropriate to your IRB/data-management protocol.
-2. In Supabase **SQL Editor**, run `database.sql`, first replacing `RESEARCHER_EMAIL_HERE` with your actual researcher login email. The check is exact and case-sensitive.
-3. Create your researcher login in Supabase **Authentication > Users**, using that exact email and a strong password. Disable public self-registration if unnecessary.
-4. Under **Project Settings > API**, copy the Project URL and **anon/publishable** key into `config.js`. **Never put a secret/service-role key into this file.**
-5. Host these four files together on HTTPS, for example using Netlify or GitHub Pages. Open `index.html` in a private browser window to test participant access. The public site does not require a Pave account.
-6. Submit a test post, then open `admin.html`, sign in with your researcher credentials, and verify that the test records appear. Test anonymous database read is denied. Remove pilot records before recruitment if required by your protocol.
-7. Do not recruit until privacy/security, consent and IRB requirements are reviewed. Because this public app allows anonymous writes, consider adding server-side rate limiting/bot protection (e.g., Supabase Edge Function) and capacity planning.
+| URL | Process controls | Main-task performance feedback |
+|---|---|---|
+| `/hh/` | Recommending, Monitoring, Restricting | Rating, Rewarding, Ad Revenue |
+| `/hl/` | Recommending, Monitoring, Restricting | None; thank-you confirmation |
+| `/lh/` | None | Rating, Rewarding, Ad Revenue |
+| `/ll/` | None | None; thank-you confirmation |
 
-## Experimental behavior
-- Process-high texts: "We strongly recommend that your post be at least 80 words."; "Your post must include at least 5 relevant hashtags before it can be published."; red pulsing "Live Tracking of your content creation process".
-- Recommending and Restricting panels turn green on meeting 80 words and 5 hashtags, respectively.
-- **Hashtag restriction enforced:** Publishing requires at least 5 distinct hashtags from the hashtag field or suggested chips. Duplicate hashtags count once. A blocked attempt preserves the draft and generates no post or outcome feedback. Posts under 80 words can publish with enough hashtags, but always receive below-average outcomes.
-- Following publication, high-outcome feedback shows Rating, Rewarding, Ad Revenue with baselines of 3.5% engagement, +5% visibility, and $5.20 revenue.
-- Posts under 80 words always receive below-average outcomes; posts with 80+ words always receive above-average outcomes. Word count uses whitespace-separated words in the post body, excluding the separate hashtag field. Publication requires five distinct hashtags. Values are uniformly sampled within the researcher-defined ranges below and rounded to two decimal places. These are specified ranges, not a shared percentage-deviation or standard-deviation rule. Below-average statements/scores are red; above-average statements/scores are green, including ad revenue. Existing stored posts retain their original values and applicable feedback.
+The root URL is another HH entry point and shares its browser-local history. Each other condition has its own history namespace. IDs are self-entered and are not verified accounts.
 
-| Metric | Platform average | Below-average outcome | Above-average outcome |
+HH/HL share `app.js`; LH and LL have their own participant scripts. All use `app.css` plus any condition-specific CSS, and load the shared `scoring.js`.
+
+## Task and publishing
+
+Participants create content about themselves: interests, experiences, hobbies, opinions, or perspectives. Task reminders use 18px bold text on Welcome and the Practice/Main introductions.
+
+- HH/HL recommend **at least 80 words** and require **five distinct hashtags** to publish. Duplicates count once. Missing hashtags open an explanatory popup; drafts are retained. Met criteria turn green.
+- LH/LL have no process-control panels, word counter, or word/hashtag requirements. Hashtags and their adaptive suggestions are optional; posts with zero hashtags may publish.
+- Every condition requires nonempty post text.
+- Adaptive hashtag lists update locally as tags are selected or typed. Suggestions exclude selected tags and duplicates; they never select themselves.
+
+## Practice and main task
+
+A new ID begins with a blank Practice composer. One practice publication unlocks **Continue to the main task**. Practice has no performance feedback or revision invitation, never uploads to Supabase, and stays in a separate browser-local record.
+
+The Main Task starts with a fresh composer and history; the profile carries forward. Existing IDs resume their saved stage, profile, drafts, and posts in the same browser. Clearing site data or switching devices does not restore this browser-local history from Supabase.
+
+HH/LH show feedback in the right-hand panel after publication (above the composer on mobile). Under 80 words gives below-average outcomes; **exactly 80 or more gives above-average outcomes**. Separate hashtag fields do not contribute to word count. Values are uniformly sampled and rounded to two decimal places:
+
+| Metric | Platform benchmark | Below average | Above average |
 |---|---:|---:|---:|
 | Engagement rate | 3.5% | 1.10–1.45% | 4.55–4.90% |
 | Visibility boost | +5% | +1.00–1.50% | +10.50–15.00% |
 | Ad revenue | $5.20 | $1.12–$1.64 | $10.00–$15.00 |
 
-- Each name edit, bio edit, and published post is saved as an append-only event with Prolific ID and timestamp; post records also contain the unshown heuristic personalness score (0–100).
+These are researcher-defined simulation parameters, not measured platform benchmarks or standard deviations. LH reveals the word criterion in feedback after posting, without offering it as process guidance beforehand.
 
-## Study limitations to resolve before live launch
-- **Returning sessions:** For privacy, anonymous participants cannot read from the research database. Their Prolific ID and local history are remembered only on the same browser; remote prior posts/profile are not automatically restored. A secure, participant-specific resume function would require a separate server-side token architecture (not a publicly guessable Prolific ID).
-- **Identity:** Someone could enter another participant's Prolific ID. Prefer passing a signed participant token through Qualtrics or Prolific, verified server-side, for production.
-- **Database write-only:** Profile edits and published posts are recorded remotely when configured; browser-local history now restores after refresh for the same Prolific ID. Remote records are not reloaded. This avoids exposing confidential researcher data through anonymous SELECT.
-- **Researcher view:** Supabase email/password authentication; the email-enforced RLS policy protects reads. Deploy `admin.html` at a private researcher URL when possible; merely hiding the URL is not a security control.
-- **Compliance:** Ensure privacy notice covers Prolific IDs, text submissions, timestamps, and behavioral scoring. No independent validation of the heuristic personalness score is implied.
-- **Outcomes:** The screenshot supplies rating and reward ranges for above/below and only a *below-average* ad-revenue range. It is not yet a fully specified 2×2 trial randomizer. Experimental assignment and reproducible random seeds should be finalized before the live study.
-- **Backend paused:** With empty database configuration, the app is usable and retains browser-local posts, profile changes, and drafts for each Prolific ID. No responses are collected in a researcher database until it is configured. When a database is configured, failed writes preserve drafts and prevent unsaved changes from appearing as recorded.
+Only a below-average HH/LH main-task result invites revision:
 
-## Local development and hosting
-Run `python3 -m http.server 8000 --bind 127.0.0.1` from the repository root.
-For GitHub Pages, choose Settings > Pages > Deploy from a branch > main > / (root).
-GitHub Pages only hosts the interface; it cannot store participant submissions.
+> Your post received an overall evaluation of **BELOW AVERAGE**. If you would like, revise your post to include **at least 80 words**, while keeping the content focused on yourself.
 
-## Future database activation
-Create a project at https://supabase.com/dashboard (the free tier can be used).
-Follow steps 2–4 above: run database.sql with your researcher email, create your
-researcher account, then set the public project URL and legacy anon key in config.js.
-Use the legacy anon key with this build's Bearer header; never a service-role or
-secret key. Commit the public config and wait for hosting to update. Before using
-the study, submit a pilot response, confirm it appears in admin.html, and verify
-anonymous reads are denied. Until this is done, real persistence is unverified.
+Original text/hashtags stay in the composer; a revision creates a linked record instead of overwriting the original. Participants may start a new post instead. Above-average publication clears the composer. HL/LL generate no performance outcomes or revision invitations and show **Thank you! Your post has been published.**
 
-## Adaptive hashtag suggestions
-Selecting or entering hashtags expands the suggested list using local topic matching and related-tag templates. Suggestions exclude selected tags and duplicates, show up to 16 options, and reset with a new draft. Participants must select suggestions themselves; the app never adds them automatically. No external AI service or participant text upload is used for this feature. Outcome probabilities and publication requirements are unchanged.
+## Supabase connection
 
-## Feedback placement
-Each successful publication shows Rating, Rewarding, and Ad Revenue in the top-right panel (above the composer on mobile). Starting the next draft restores AI Guidance there. Feedback is no longer rendered beneath posts. Historical outcome values remain in each post’s browser-local record. After publishing, the app scrolls to feedback and respects reduced-motion preferences.
+Public project URL and publishable key are configured in `config.js`, `hh/config.js`, `hl/config.js`, `lh/config.js`, and `ll/config.js`. Only public browser keys belong here—never database passwords or secret/service-role keys. Anonymous submissions send the public key in the `apikey` header, not as a Bearer token.
 
-## Browser history by participant
-Posts, original feedback values, name/bio, and unfinished drafts are saved in localStorage under a separate key for each exact, trimmed Prolific ID. Entering the same ID in the same browser restores that history; a previously unseen ID starts fresh. Switching IDs does not delete another ID’s history. This is browser-local convenience storage, not authentication or a researcher database: anyone with access to that browser and ID can reopen its history. Clearing site data, private browsing expiration, or changing devices loses access. Storage failures display a message instead of claiming the history was saved. Responses from before this feature cannot be recovered after their page session ended. Backend collection remains separate.
+For a fresh database, create the researcher Auth account, replace `RESEARCHER_EMAIL_HERE` in `database.sql`, and run it in Supabase SQL Editor. The project owner has reported running this schema setup already. Re-running is not needed merely to configure the app.
 
-## AI control placement
-AI RECOMMENDING appears inside the white composer card, directly above its Composer heading; AI RESTRICTING sits above the hashtag field, with “at least 5 hashtags” bold in both unmet/met messages. AI MONITORING remains in the right sidebar on desktop. Labels retain their AI attribution when requirements are met. Mobile shows monitoring before the recommendation/composer.
+The schema permits anonymous inserts, denies anonymous reads/updates/deletes, and restricts authenticated reads to the configured researcher Auth user ID. Inspect any independently added policies because permissive RLS policies can combine. The app does not authenticate participant identity.
 
-## Persistent monitoring indicator
-AI Monitoring stays at the top of the right panel during both composing and feedback. Its larger activity indicator uses a 1.5-second pulse and expanding halo; reduced-motion preferences disable animation. The panel shows the same content-creation-process label and does not introduce additional tracking.
+Every new main-task publication saves:
 
-Ad Revenue has replaced Discoverability for new posts. Feedback explains higher or reduced revenue using the 80-word threshold. New saved events use `ad_revenue` in post detail and `revenue` in feedback JSON. Existing historical discoverability and revenue outcomes remain unchanged and supported for restoration.
+- `prolific_id`, condition, event type, database timestamp;
+- post text, hashtags, creator name/bio, stage, post ID, revision-of ID in `detail` JSON;
+- `personalness_score` and `scoring_method`;
+- simulated feedback JSON for HH/LH; null feedback for HL/LL.
 
-## Review and revision
-Only a below-average main-task result offers revision. Practice never offers review or revision. The prompt states that the overall evaluation is BELOW AVERAGE and optionally invites participants to review criteria and feedback and revise. The original text and hashtags stay in the composer; Publish revision creates a linked post while preserving the original. Participants can choose Start a new post instead. Above-average results show no revision invitation and reset the composer for an independent post. No aggregate numerical score is calculated. Revision state persists per ID, and only below-average posts can restore as revision targets. Post details include `post_id` and `revision_of`; feedback and practice rules are otherwise unchanged.
+Main-task profile edits are separate append-only events. Practice profile edits and posts remain local. Previously stored browser posts are not uploaded automatically. Failed remote writes preserve the draft and do not claim publication.
 
-## Task reminders
-The welcome/Prolific-ID page and main creation screen both show the self-focused task in 18px bold text. Practice and main-task introductions also repeat a prominent 18px bold reminder to create content about oneself. Revision prompts repeat the instruction to focus on the participant’s own interests, experiences, hobbies, opinions, or perspectives. These are the participant-facing stages available in this app; external recruitment or survey pages must be updated separately.
+## Personalness scoring; sentiment deferred
 
-## Three-page participant flow
-Page 1 is the Welcome/Prolific-ID screen. New IDs then enter Page 2 (Practice), using the same composer, word counter, adaptive hashtags, and AI Recommending/Monitoring/Restricting controls. At least one nonempty practice post with five distinct hashtags unlocks Continue to the main task. Practice starts with a blank composer for a new ID. A successful practice post shows only “Practice post published.”, clears the composer, and generates no performance scores or revision invitations. Previously stored practice scores cannot activate revision prompts. Practice never writes events to Supabase.
-Page 3 (Main Task) begins with instructions to create and publish. No review/revision instructions are shown before a below-average result; only that result triggers the optional revision prompt. Practice posts/drafts are kept in a separate browser-local session key; the profile carries forward, while the main composer and post history start fresh. Main events include `study_phase: main` in post detail. Stage progress persists by Prolific ID. Existing IDs with main-task history resume the main task without losing history. Practice is familiarization, not an additional experiment condition.
+All four conditions use the same existing **exploratory keyword heuristic**, implemented once in `scoring.js` and recorded as `keyword-heuristic-v1`. It never changes displayed performance feedback.
 
-Practice enforcement: both score generation and feedback rendering are disabled during practice. Practice posts store null feedback locally and are not sent to the researcher database. Main-task feedback and below-average optional revisions remain unchanged.
+The retained rubric awards 35 points for a personal pronoun, 15 for audience-related pronouns, 20 for a listed emotion/reflection word, and 15 for at least two hashtags. A subtotal of at least 50 receives another 15, capped at 100. Its hashtag component can covary with experimental compliance, so it should not be treated as a validated independent disclosure measure. Preserve raw text/hashtags to support later rescoring and human validation.
 
-## Participant versions
-- `/hh/`: current High Process × High Outcome app. Existing root URL remains an HH entry point and shares its saved history.
-- `/hl/`: High Process × Low Outcome: retains high-process AI controls and publishing requirements, but `feedbackStyle: none` disables all performance feedback and revision invitations. Successful main-task posting shows only a thank-you confirmation.
-Both use shared `app.css` and `app.js` with their own `config.js`. Shared code keeps the common UI and rules consistent; version-specific configuration controls feedback explanations. HL has a separate localStorage namespace for stage progress, drafts, profiles, and posts. Existing HH storage keys are preserved. The existing researcher dashboard remains at `/admin.html`; when backend configuration is enabled, use consistent project settings in each relevant config.
+Sentiment analysis is not implemented. `sentiment_score` remains available for later work; positive/negative tone is distinct from personal disclosure.
 
-## Revised LL condition
-LL now has no AI Recommending, Monitoring, or Restricting panels, word counter, suggested hashtags, or minimum word/hashtag thresholds. Hashtags are optional. A nonempty post can be published in practice or main; the confirmation is “Thank you! Your post has been published.” No performance scores, outcome assignments, or revision invitations are generated or shown. Existing posts/profiles/drafts remain restorable; old outcome records are retained but never displayed. Main-task events retain condition/stage attribution with null feedback and personalness score. Practice remains local-only and unlocks the separate main task after one practice publication. HH, HL, and LH are unchanged.
+## Researcher dashboard
 
-## Revised LH condition
-LH has no Monitoring, Recommending, or Restricting panels, word counter, hashtag suggestions, or minimum hashtag requirement. Nonempty posts may be any length. Practice has confirmation only. Main-task high-outcome feedback keeps explicit algorithm-attribution messages and existing numeric ranges, and includes “because” explanations revealing the 80-word rule after publication. The rule is not presented as guidance before posting. Internally, fewer than 80 words gives below-average results and 80+ gives above-average results; only below-average main-task results invite optional revision. HH, HL, and LL are unchanged by this LH update.
+Open `/admin.html` and sign in with the researcher account created in Supabase Authentication. The root `config.js` supplies the same project connection. Database RLS, not the page URL, controls reading.
 
-## Revised HL outcome control
-HL keeps its high-process Recommending, Monitoring, Restricting, word counter, and five-distinct-hashtag requirement. It now uses `feedbackStyle: none`: main-task publication shows “Thank you! Your post has been published.” with no outcome scores, feedback cards, or revision invitation. Drafts clear after successful publishing; posts and profiles retain browser-local history, including legacy posts. New events contain null feedback and personalness scores. HH, LH, and LL are unchanged.
+The dashboard shows PID, condition, event, stage, personalness score, scoring method, and readable post/profile detail. Filter by PID and export CSV, including original raw detail, parsed post text, IDs/revision links, hashtags, and feedback. No researcher password or session token belongs in repository files.
+
+## Development and verification
+
+From the repository root:
+
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1
+```
+
+GitHub Pages should deploy `main` from `/ (root)`. No build or dependency install is required to serve the app.
+
+Local browser tests with mocked Supabase requests cover all four conditions, practice isolation, payloads/public-key headers, consistent personalness scoring, original/revision linkage, optional LH/LL hashtags, failure/draft recovery, history, and mobile layout. The dashboard was checked with mocked Auth/data for filtering, readable CSV, escaped post text, and logout cleanup.
+
+**Live verification remains outstanding:** this workspace's proxy currently blocks the Supabase project domain. A draft domain addition has been saved in environment settings; it does not itself apply or publish the network change. Before collecting study data, publish a pilot main-task post in each condition, verify the records through the researcher dashboard, and confirm anonymous reads are denied. Local mocks do not establish live database connectivity, RLS enforcement, or successful researcher authentication.
