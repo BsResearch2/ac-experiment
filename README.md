@@ -96,3 +96,6 @@ HH/HL (and the root HH entry) state: “The algorithm recommends that your post 
 
 ## Profile removal
 All participant entry points omit the creator profile card, editable name/bio, and avatars. Post cards show the timestamp, content, and hashtags. New submissions no longer include creator name or bio, and no profile-edit events are generated. Prolific ID entry, condition-specific storage keys, existing post history and historical backend records are preserved.
+
+## Practice continuation placement
+In every condition, Continue to the main task sits directly below the publication confirmation in the composer. It is disabled until one practice post has been published, then appears with a reminder that participants can practice again or continue. A practice publication scrolls the continuation area into view while respecting reduced-motion preferences. The continuation area is hidden during the main task.

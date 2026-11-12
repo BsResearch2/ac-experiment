@@ -91,3 +91,8 @@ button:focus-visible,.field:focus-visible{outline:2px solid var(--focus-ring);ou
 .monitor-explanation{margin:12px 0;font-size:14px;line-height:1.5}
 .monitor-requirements{display:grid;gap:8px;border-top:1px solid #e2d5cc;padding-top:12px;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
 .monitor-requirements>div{overflow-wrap:anywhere}
+
+.practice-next{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid #e7ded5;padding-top:14px;margin-top:16px}
+.practice-next p{flex:1 1 220px;margin:0;color:#685043;font-size:14px;line-height:1.5}
+.practice-next .btn{min-height:44px}
+@media(max-width:760px){.practice-next .btn{width:100%}}
