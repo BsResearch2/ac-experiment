@@ -99,3 +99,6 @@ All participant entry points omit the creator profile card, editable name/bio, a
 
 ## Practice continuation placement
 In every condition, Continue to the main task sits directly below the publication confirmation in the composer. It is disabled until one practice post has been published, then appears with a reminder that participants can practice again or continue. A practice publication scrolls the continuation area into view while respecting reduced-motion preferences. The continuation area is hidden during the main task.
+
+## Concise practice introduction
+All conditions show “Practice run” and a short explanation to publish at least one practice post, then use Continue to the main task below the composer. The top practice box hides the repeated self-focused task reminder; the separate YOUR TASK box retains the full instruction. Main-task and welcome instructions remain unchanged.
