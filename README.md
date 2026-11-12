@@ -28,7 +28,7 @@ Participants create content about themselves: interests, experiences, hobbies, o
 
 A new ID begins with a blank Practice composer. One practice publication unlocks **Continue to the main task**. Practice has no performance feedback or revision invitation, never uploads to Supabase, and stays in a separate browser-local record.
 
-The Main Task starts with a fresh composer and history; the profile carries forward. Existing IDs resume their saved stage, profile, drafts, and posts in the same browser. Clearing site data or switching devices does not restore this browser-local history from Supabase.
+The Main Task starts with a fresh composer and history; the Existing IDs resume their saved stage, drafts, and posts in the same browser. Clearing site data or switching devices does not restore this browser-local history from Supabase.
 
 HH/LH show feedback in the right-hand panel after publication (above the composer on mobile). Under 80 words gives below-average outcomes; **exactly 80 or more gives above-average outcomes**. Separate hashtag fields do not contribute to word count. Values are uniformly sampled and rounded to two decimal places:
 
@@ -57,11 +57,11 @@ The schema permits anonymous inserts, denies anonymous reads/updates/deletes, an
 Every new main-task publication saves:
 
 - `prolific_id`, condition, event type, database timestamp;
-- post text, hashtags, creator name/bio, stage, post ID, revision-of ID in `detail` JSON;
+- post text, hashtags, stage, post ID, revision-of ID in `detail` JSON;
 - `personalness_score` and `scoring_method`;
 - simulated feedback JSON for HH/LH; null feedback for HL/LL.
 
-Main-task profile edits are separate append-only events. Practice profile edits and posts remain local. Previously stored browser posts are not uploaded automatically. Failed remote writes preserve the draft and do not claim publication.
+Profile creation/editing is removed in all conditions. Historical profile events remain in the database. Practice posts remain local. Previously stored browser posts are not uploaded automatically. Failed remote writes preserve the draft and do not claim publication.
 
 ## Personalness scoring; sentiment deferred
 
@@ -93,3 +93,6 @@ Local browser tests with mocked Supabase requests cover all four conditions, pra
 
 ## High-process live requirement indicators
 HH/HL (and the root HH entry) state: “The algorithm recommends that your post contain at least 80 words to meet platform writing guidelines.” Monitoring explicitly attributes writing/hashtag checks to the platform algorithm and shows live `Writing requirement: n/80 words` and `Hashtag requirement: n/5 hashtags`. Hashtag progress includes selected tags plus deduplicated hashtags currently typed in the input; clearing/removing tags and restoring drafts update these counts. Progress is not capped at the threshold. Only hashtag compliance blocks publication; the existing word-count outcome rule is unchanged. LH/LL remain unaffected.
+
+## Profile removal
+All participant entry points omit the creator profile card, editable name/bio, and avatars. Post cards show the timestamp, content, and hashtags. New submissions no longer include creator name or bio, and no profile-edit events are generated. Prolific ID entry, condition-specific storage keys, existing post history and historical backend records are preserved.
