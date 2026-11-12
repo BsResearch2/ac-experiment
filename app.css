@@ -96,3 +96,10 @@ button:focus-visible,.field:focus-visible{outline:2px solid var(--focus-ring);ou
 .practice-next p{flex:1 1 220px;margin:0;color:#685043;font-size:14px;line-height:1.5}
 .practice-next .btn{min-height:44px}
 @media(max-width:760px){.practice-next .btn{width:100%}}
+
+/* Distinguish moving forward from repeating practice. */
+#continueMain{background:#2d6a4f;color:#fff;border:1px solid #2d6a4f}
+#continueMain:hover:not(:disabled){background:#24563f;box-shadow:0 4px 12px rgba(45,106,79,.18)}
+#publish.practice-repeat{background:transparent;color:#765b4d;border:1px solid #bca89a;box-shadow:none}
+#publish.practice-repeat:hover:not(:disabled){background:#f5efe9;box-shadow:none}
+.practice-next.is-ready{background:#f1f7f3;border:1px solid #c4d8ca;border-radius:10px;padding:14px}

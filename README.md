@@ -102,3 +102,6 @@ In every condition, Continue to the main task sits directly below the publicatio
 
 ## Concise practice introduction
 All conditions show “Practice run” and a short explanation to publish at least one practice post, then use Continue to the main task below the composer. The top practice box hides the repeated self-focused task reminder; the separate YOUR TASK box retains the full instruction. Main-task and welcome instructions remain unchanged.
+
+## Distinct practice actions
+Continue to the main task uses a green primary button in all conditions. After the first practice publication, its area is highlighted and the publish button becomes an outlined secondary action labeled Publish another practice post. Main-task publication returns to the normal publish style. Navigation rules and experimental conditions are unchanged.
