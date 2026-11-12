@@ -87,3 +87,7 @@ button:focus-visible,.field:focus-visible{outline:2px solid var(--focus-ring);ou
 .stage-intro .stage-task-reminder{font-size:18px;font-weight:700;line-height:1.6;color:#28211b}
 
 .feedback-card.metrics-only .feedback-metrics{border-top:0;padding-top:8px}
+
+.monitor-explanation{margin:12px 0;font-size:14px;line-height:1.5}
+.monitor-requirements{display:grid;gap:8px;border-top:1px solid #e2d5cc;padding-top:12px;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
+.monitor-requirements>div{overflow-wrap:anywhere}
