@@ -5,6 +5,7 @@ window.EXPERIMENT_CONFIG = {
   // Participant version and experimental condition.
   variant: 'hh',
   condition: 'high_process_high_outcome',
-  // Outcomes: under 80 words always below average; 80+ always above.
-  // Ad revenue: $1.12–$1.64 under 80 words; $10.00–$15.00 at 80+.
+  // Valence comes only from Qualtrics: ?valence=positive or ?valence=negative.
+  // Numeric values vary within the assigned ranges, independently of post content.
+  // Ad revenue ranges: negative $1.12–$1.64; positive $10.00–$15.00.
 };

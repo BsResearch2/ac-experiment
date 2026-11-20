@@ -30,7 +30,7 @@ A new ID begins with a blank Practice composer. One practice publication unlocks
 
 The Main Task starts with a fresh composer and history; the Existing IDs resume their saved stage, drafts, and posts in the same browser. Clearing site data or switching devices does not restore this browser-local history from Supabase.
 
-HH/LH show feedback in the right-hand panel after publication (above the composer on mobile). Under 80 words gives below-average outcomes; **exactly 80 or more gives above-average outcomes**. Separate hashtag fields do not contribute to word count. Values are uniformly sampled and rounded to two decimal places:
+HH/LH show feedback in the right-hand panel after publication (above the composer on mobile). HH/LH use the `valence` URL parameter assigned in Qualtrics: `negative` gives below-average outcomes and `positive` gives above-average outcomes. This assignment is fixed throughout the participant’s main task and is independent of word count or other content. The app does not randomize valence. Separate hashtag fields do not contribute to word count. Values are uniformly sampled and rounded to two decimal places:
 
 | Metric | Platform benchmark | Below average | Above average |
 |---|---:|---:|---:|
@@ -38,7 +38,7 @@ HH/LH show feedback in the right-hand panel after publication (above the compose
 | Visibility boost | +5% | +1.00–1.50% | +10.50–15.00% |
 | Ad revenue | $5.20 | $1.12–$1.64 | $10.00–$15.00 |
 
-These are researcher-defined simulation parameters, not measured platform benchmarks or standard deviations. LH reveals the word criterion in feedback after posting, without offering it as process guidance beforehand.
+These are researcher-defined simulation parameters, not measured platform benchmarks or standard deviations. Outcome feedback attributes results to the algorithm without revealing any behavioral evaluation criterion. The 80-word recommendation and monitoring indicators in HH remain separate process-control cues and do not determine outcomes.
 
 Post revisions are disabled in all four conditions. There are no revision prompts, revision buttons, or prefilled post-revision forms. Successful publication clears the composer; subsequent submissions are independent posts with `revision_of: null`. Old draft text and post history still restore, but an old revision target never re-enables revision mode. Historical revision links remain in stored records. Feedback assignment/ranges and all process controls are unchanged by this revision-removal update.
 
@@ -88,7 +88,7 @@ Local browser tests with mocked Supabase requests cover all four conditions, pra
 **Live verification remains outstanding:** this workspace's proxy currently blocks the Supabase project domain. A draft domain addition has been saved in environment settings; it does not itself apply or publish the network change. Before collecting study data, publish a pilot main-task post in each condition, verify the records through the researcher dashboard, and confirm anonymous reads are denied. Local mocks do not establish live database connectivity, RLS enforcement, or successful researcher authentication.
 
 ## High-process live requirement indicators
-HH/HL (and the root HH entry) state: “The algorithm recommends that your post contain at least 80 words to meet platform writing guidelines.” Monitoring explicitly attributes writing/hashtag checks to the platform algorithm and shows live `Writing requirement: n/80 words` and `Hashtag requirement: n/5 hashtags`. Hashtag progress includes selected tags plus deduplicated hashtags currently typed in the input; clearing/removing tags and restoring drafts update these counts. Progress is not capped at the threshold. Only hashtag compliance blocks publication; the existing word-count outcome rule is unchanged. LH/LL remain unaffected.
+HH/HL (and the root HH entry) state: “The algorithm recommends that your post contain at least 80 words to meet platform writing guidelines.” Monitoring explicitly attributes writing/hashtag checks to the platform algorithm and shows live `Writing requirement: n/80 words` and `Hashtag requirement: n/5 hashtags`. Hashtag progress includes selected tags plus deduplicated hashtags currently typed in the input; clearing/removing tags and restoring drafts update these counts. Progress is not capped at the threshold. Only hashtag compliance blocks publication; the writing threshold is a process cue and does not determine outcome valence. LH/LL remain unaffected.
 
 ## Profile removal
 All participant entry points omit the creator profile card, editable name/bio, and avatars. Post cards show the timestamp, content, and hashtags. New submissions no longer include creator name or bio, and no profile-edit events are generated. Prolific ID entry, condition-specific storage keys, existing post history and historical backend records are preserved.
@@ -101,3 +101,23 @@ All conditions show “Practice run” and a short explanation to publish at lea
 
 ## Distinct practice actions
 Continue to the main task uses a green primary button in all conditions. After the first practice publication, its area is highlighted and the publish button becomes an outlined secondary action labeled Publish another practice post. Main-task publication returns to the normal publish style. Navigation rules and experimental conditions are unchanged.
+
+## Qualtrics-controlled outcome valence (HH/LH only)
+Use one existing page per high-outcome condition; there are no separate positive/negative app versions:
+
+- `https://bsresearch2.github.io/ac-experiment/hh/?valence=positive`
+- `https://bsresearch2.github.io/ac-experiment/hh/?valence=negative`
+- `https://bsresearch2.github.io/ac-experiment/lh/?valence=positive`
+- `https://bsresearch2.github.io/ac-experiment/lh/?valence=negative`
+
+In Qualtrics Survey Flow, assign the experiment condition first. Within HH/LH, use a Randomizer to present one of two Embedded Data assignments: `valence=positive` or `valence=negative`. Set this once before the app link is shown and retain it on return. Pipe the field into the link: `/hh/?valence=${e://Field/valence}` or `/lh/?valence=${e://Field/valence}`. Qualtrics owns randomization and its probability/balancing settings. These Survey Flow changes must be configured in Qualtrics; repository code cannot create them.
+
+`valence.js` accepts exactly one, case-sensitive value, `positive` or `negative`. Missing/invalid/duplicate parameters block entry with a link-error message. It never silently defaults or randomizes. Practice and main-task hash navigation preserves the query string. The assignment is bound to the existing condition + PID browser-local session and is checked again on return. Conflicting assignments, unreadable saved assignments, or legacy main-task work from before this assignment version block entry without deleting or changing prior posts. Use a fresh test PID for the new design. Practice-only legacy history can continue under a valid assignment. This is local consistency checking, not signed assignment verification across devices.
+
+All main-task posts retain the same assigned valence even when length or hashtags change. Only numeric engagement, visibility, and revenue values vary within the existing ranges. There are still no revision options. HH process cues/hashtag enforcement remain intact; HL and LL have no valence requirement and no performance feedback.
+
+New HH/LH records include `assigned_valence` (`positive`/`negative`), `assignment_source` (`qualtrics_url`), `assignment_version` (`qualtrics-valence-v1`), assignment timestamp, and `main_post_number` in `detail`, plus PID, condition, post ID, and database timestamp. `feedback` repeats the assigned valence/source/version and retains `valence` (`above`/`below`) for compatibility. Practice is not uploaded. Existing database JSON fields support these additions; no SQL migration is required.
+
+The researcher dashboard shows Assigned valence and Assignment source, and CSV includes both plus assignment version and main-post number. Historical records without explicit assignments remain blank in these new fields; the app does not infer or backfill Qualtrics assignments from old performance scores. Qualtrics should retain the embedded field for joining survey responses by PID.
+
+Run assignment validation tests with `node --test tests/valence.test.cjs`. Local browser checks also cover both valences in HH/LH, parameter validation, returning-session conflicts, fixed assignment for short/long posts, data logging, and low-outcome regressions. Backend requests and dashboard Auth/data were mocked; this does not verify the live Qualtrics Survey Flow or a live Supabase login.
