@@ -7,5 +7,5 @@ window.EXPERIMENT_CONFIG = {
   condition: 'high_process_high_outcome',
   // Valence comes only from Qualtrics: ?valence=positive or ?valence=negative.
   // Numeric values vary within the assigned ranges, independently of post content.
-  // Ad revenue ranges: negative $1.12–$1.64; positive $10.00–$15.00.
+  // Ad revenue average: $10.00; negative $1.00–$3.00; positive $7.00–$9.00.
 };
