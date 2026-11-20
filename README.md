@@ -40,11 +40,7 @@ HH/LH show feedback in the right-hand panel after publication (above the compose
 
 These are researcher-defined simulation parameters, not measured platform benchmarks or standard deviations. LH reveals the word criterion in feedback after posting, without offering it as process guidance beforehand.
 
-Only a below-average HH/LH main-task result invites revision:
-
-> Your post received an overall evaluation of **BELOW AVERAGE**. If you would like, revise your post to include **at least 80 words**, while keeping the content focused on yourself.
-
-Original text/hashtags stay in the composer; a revision creates a linked record instead of overwriting the original. Participants may start a new post instead. Above-average publication clears the composer. HL/LL generate no performance outcomes or revision invitations and show **Thank you! Your post has been published.**
+Post revisions are disabled in all four conditions. There are no revision prompts, revision buttons, or prefilled post-revision forms. Successful publication clears the composer; subsequent submissions are independent posts with `revision_of: null`. Old draft text and post history still restore, but an old revision target never re-enables revision mode. Historical revision links remain in stored records. Feedback assignment/ranges and all process controls are unchanged by this revision-removal update.
 
 ## Supabase connection
 

@@ -1,5 +1,5 @@
 
-(() => {'use strict';const cfg=window.EXPERIMENT_CONFIG||{},url=cfg.supabaseUrl?.replace(/\/$/,'')||'',key=cfg.supabaseAnonKey||'',cloud=!!(url&&key);const $=id=>document.getElementById(id);const suggestions=['#realtalk','#personalgrowth','#behindthescenes','#smallmoments','#journaling','#lifelately','#selfcare','#authenticity','#mondaymotivation','#dailyvlog'];let pid='',tags=[],posts=[],eventIndex=0,revisionOf=null,phase='practice';const escapeHTML=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));async function save(eventType,detail,personalness=null,outcome=null){if(phase==='practice'||!cloud) return false;const obj={prolific_id:pid,event_type:eventType,detail,personalness_score:personalness,scoring_method:eventType==='Post Published'?window.EXPERIMENT_SCORING.method:null,condition:cfg.condition||'low_process_low_outcome',feedback:outcome};const res=await fetch(url+'/rest/v1/experiment_events',{method:'POST',headers:{apikey:key,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(obj)});if(!res.ok)throw Error('Database could not save your submission ('+res.status+').');return true}
+(() => {'use strict';const cfg=window.EXPERIMENT_CONFIG||{},url=cfg.supabaseUrl?.replace(/\/$/,'')||'',key=cfg.supabaseAnonKey||'',cloud=!!(url&&key);const $=id=>document.getElementById(id);const suggestions=['#realtalk','#personalgrowth','#behindthescenes','#smallmoments','#journaling','#lifelately','#selfcare','#authenticity','#mondaymotivation','#dailyvlog'];let pid='',tags=[],posts=[],eventIndex=0,phase='practice';const escapeHTML=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));async function save(eventType,detail,personalness=null,outcome=null){if(phase==='practice'||!cloud) return false;const obj={prolific_id:pid,event_type:eventType,detail,personalness_score:personalness,scoring_method:eventType==='Post Published'?window.EXPERIMENT_SCORING.method:null,condition:cfg.condition||'low_process_low_outcome',feedback:outcome};const res=await fetch(url+'/rest/v1/experiment_events',{method:'POST',headers:{apikey:key,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(obj)});if(!res.ok)throw Error('Database could not save your submission ('+res.status+').');return true}
 // Per-participant browser history; does not grant access to remote research records.
 function readLocalJSON(key,fallback){try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch{return fallback}}
 function variantPrefix(){return cfg.variant&&cfg.variant!=='hh'?encodeURIComponent(cfg.variant)+':':''}
@@ -7,11 +7,11 @@ function mainSessionKey(){return 'creator_experiment_session_v1:'+variantPrefix(
 function progressKey(){return 'creator_experiment_progress_v1:'+variantPrefix()+encodeURIComponent(pid)}
 function sessionKey(){return mainSessionKey()+(phase==='practice'?':practice':'')}
 function saveProgress(){try{localStorage.setItem(progressKey(),phase)}catch{}}
-function persistSession(){if(!pid)return;try{localStorage.setItem(sessionKey(),JSON.stringify({version:1,posts,revisionOf,draft:$('body').value,tags,hashtagInput:$('hashtagInput').value}));$('localSaveError').classList.add('hide')}catch{$('localSaveError').textContent='This browser could not save your history. Keep this page open to avoid losing your work.';$('localSaveError').classList.remove('hide')}}
-function restoreSession(){const saved=readLocalJSON(sessionKey(),null);posts=[];tags=[];revisionOf=null;$('body').value='';$('hashtagInput').value='';if(!saved||saved.version!==1)return;
+function persistSession(){if(!pid)return;try{localStorage.setItem(sessionKey(),JSON.stringify({version:1,posts,revisionOf:null,draft:$('body').value,tags,hashtagInput:$('hashtagInput').value}));$('localSaveError').classList.add('hide')}catch{$('localSaveError').textContent='This browser could not save your history. Keep this page open to avoid losing your work.';$('localSaveError').classList.remove('hide')}}
+function restoreSession(){const saved=readLocalJSON(sessionKey(),null);posts=[];tags=[];$('body').value='';$('hashtagInput').value='';if(!saved||saved.version!==1)return;
  if(Array.isArray(saved.posts))posts=saved.posts.filter(p=>p&&typeof p.body==='string'&&typeof p.time==='string'&&Array.isArray(p.tags)&&p.tags.every(t=>typeof t==='string'));
  if(typeof saved.draft==='string')$('body').value=saved.draft;if(typeof saved.hashtagInput==='string')$('hashtagInput').value=saved.hashtagInput;
- if(Array.isArray(saved.tags))tags=[...new Set(saved.tags.filter(t=>typeof t==='string'))];revisionOf=null;eventIndex=posts.length;
+ if(Array.isArray(saved.tags))tags=[...new Set(saved.tags.filter(t=>typeof t==='string'))];eventIndex=posts.length;
 }
 // Local topic matching expands suggestions without sending participant text anywhere.
 const hashtagTopics=[
@@ -31,7 +31,7 @@ function renderTags(){$('suggestions').innerHTML=suggestedTags().map(t=>`<button
 function renderPosts(animateNew=false){$('feed').innerHTML=posts.length?posts.map((p,i)=>`<article class="post${animateNew&&i===0?' post-enter':''}"><small class="post-time">${escapeHTML(p.time)}</small><p>${escapeHTML(p.body)}</p><div class="posttags">${p.tags.map(escapeHTML).join(' ')}</div></article>`).join(''):'<p class="sub">No posts published yet.</p>'}
 function parseHashtags(str){return(str.match(/#?[\p{L}\p{N}_]+/gu)||[]).map(s=>'#'+s.replace(/^#+/,'').toLowerCase())}function addTags(str){tags=[...new Set([...tags,...parseHashtags(str)])];$('hashtagInput').value='';renderTags()}
 $('suggestions').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)addTags(b.dataset.add)});
-$('chosen').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(b){tags=tags.filter(t=>t!==b.dataset.remove);renderTags()}});$('hashtagInput').addEventListener('input',persistSession);$('hashtagInput').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();addTags(e.target.value)}});$('hashtagInput').addEventListener('blur',e=>{if(e.target.value.trim())addTags(e.target.value)});$('body').addEventListener('input',persistSession);$('clear').addEventListener('click',()=>{revisionOf=null;$('body').value='';tags=[];renderTags();$('saveStatus').textContent='Draft cleared.'});
+$('chosen').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(b){tags=tags.filter(t=>t!==b.dataset.remove);renderTags()}});$('hashtagInput').addEventListener('input',persistSession);$('hashtagInput').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();addTags(e.target.value)}});$('hashtagInput').addEventListener('blur',e=>{if(e.target.value.trim())addTags(e.target.value)});$('body').addEventListener('input',persistSession);$('clear').addEventListener('click',()=>{$('body').value='';tags=[];renderTags();$('saveStatus').textContent='Draft cleared.'});
 $('publish').addEventListener('click',async()=>{
  const body=$('body').value.trim();
  if(!body){$('saveStatus').textContent='Please write something before publishing.';return}
@@ -42,7 +42,7 @@ $('publish').addEventListener('click',async()=>{
  try{
   await save('Post Published',detail,phase==='practice'?null:window.EXPERIMENT_SCORING.personalness(body,currentTags),null);
   posts.unshift({id:postId,revisionOf:null,body,tags:currentTags,time:new Date().toLocaleString(),outcome:null});
-  eventIndex++;revisionOf=null;$('body').value='';tags=[];renderTags();renderPosts(true);
+  eventIndex++;$('body').value='';tags=[];renderTags();renderPosts(true);
   $('saveStatus').textContent='Thank you! Your post has been published.';if(phase==='practice')$('practiceNext').scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
  }catch(e){$('saveStatus').textContent=e.message}finally{$('publish').disabled=false}
 });
